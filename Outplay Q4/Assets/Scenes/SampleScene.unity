@@ -371,8 +371,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnableObject: {fileID: 7489156795509992430, guid: 4212fe216d73c644faeab0b9acfeeb47,
     type: 3}
-  minRange: 0
-  maxRange: 0
+  minXZRange: -100
+  maxXZRange: 100
+  minYRange: 0
+  maxYRange: 0
 --- !u!4 &885631430
 Transform:
   m_ObjectHideFlags: 0
@@ -402,8 +404,8 @@ MonoBehaviour:
   PointSphere: {fileID: 7489156795509992430, guid: 2253ec2800ce74c45ac10d6945906dec,
     type: 3}
   P1: {x: -100, y: 0, z: 0}
-  P2: {x: 0, y: 50, z: -100}
-  P3: {x: 0, y: 50, z: 100}
+  P2: {x: 0, y: 0, z: -100}
+  P3: {x: 0, y: 0, z: 100}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

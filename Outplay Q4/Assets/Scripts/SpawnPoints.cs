@@ -6,6 +6,8 @@ public class SpawnPoints : MonoBehaviour
 
     public GameObject PointSphere;
 
+    [Header("Set 3 Points")]
+
     public Vector3 P1;
     public Vector3 P2;
     public Vector3 P3;

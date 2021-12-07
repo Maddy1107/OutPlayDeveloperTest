@@ -7,9 +7,9 @@ public class Movement : MonoBehaviour
     public float speed = 5.0f;//movement speed
     public List<Vector3> points;//All the points
 
-    private int currentPointIndex = 2;//current point the player is moving towards
+    private int currentPointIndex = 0;//current point the player is moving towards
 
-    bool reachedFinal;//check if reached the last point
+    bool reachedFinal = false;//check if reached the last point
 
     bool effectPlayed = false;
 
@@ -27,7 +27,7 @@ public class Movement : MonoBehaviour
     void Update()
     {
         //check if reached teh last point or else keep moving
-        if(currentPointIndex != points.Count && !reachedFinal)
+        if(currentPointIndex != points.Count)
         {
             MovePlayer();
         }
