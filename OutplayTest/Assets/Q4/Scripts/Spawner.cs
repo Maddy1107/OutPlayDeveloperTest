@@ -19,7 +19,6 @@ public class Spawner : MonoBehaviour
     {
         SpawnObjects();
         SpawnPoints();
-        SpawnPlayer();
     }
 
     public void SpawnPoints()
