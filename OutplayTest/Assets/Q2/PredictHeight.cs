@@ -49,6 +49,7 @@ public class PredictHeight : MonoBehaviour
         //initialising required position to 0
         float reqX = 0;
 
+        
         #region Change of Parameters
 
         GUI.Label(new Rect(10, Screen.height - groundHeight - 480, 200, 5), "Change Parameters", style);
@@ -93,6 +94,15 @@ public class PredictHeight : MonoBehaviour
         //Call the function to predict the path and tehj final position at teh specified height.
         TryCalculateXPositionAtHeight(Height, initialPos, velocity, gravity, width, ref reqX);
 
+        if (reqX == 0)
+        {
+            GUI.Label(new Rect((Screen.width - width) / 2 + 80, Screen.height - groundHeight + 10, width, 30), "Required Position - Not reached Height", style);
+        }
+        else
+        {
+            GUI.Label(new Rect((Screen.width - width) / 2 + 80, Screen.height - groundHeight + 10, width, 30), "Required Position-" + reqX, style);
+        }
+
         Debug.Log(reqX);
 
     }
@@ -108,24 +118,41 @@ public class PredictHeight : MonoBehaviour
     #region TryCalculateXPositionAtHeight
     bool TryCalculateXPositionAtHeight(float h, Vector2 p, Vector2 v, float G, float w, ref float xPosition)
     {
+
+        //--------------------------------------------------------Initial Approach------------------------------------------------------------------------
+
+        // Initial approach was to get the time required to reach the height and 
+        //then find the x position by adding the distance that will be travelled in the calculated time.
+
+
+        //Calculate the time to reach the given height
+
+        //float time = (Mathf.Sqrt(v.y * v.y - 4.0f * (_G * 0.5f) * (p.y - currentpos.y)) - v.y) / (2.0f * (_G * 0.5f));
+
+        //Get the new Xposition by adding the distance to the initial position.
+        //Accelaration = 0
+
+        //float XPos = p.x + (time * v.x);
+        //--------------------------------------------------------Initial Approach------------------------------------------------------------------------
+
+        //--------------------------------------------------------Final Approach------------------------------------------------------------------------
+
+
+        //Final approach is to apply the forces to the balls current pos to find the next position
+        //Check if it is colliding with the wall on either side.
+        //Check if reached the height, if yes set that to teh xPosition.
+        //Lastly if it has reached teh ground, it will not bounce and will return false
+        //Else it will continue.
+
         Vector2 currentpos = p;
         Vector2 prevpos = currentpos;
         Vector2 vel = velocity;
-        float _G = G;
-        int numCalc = 100;
-        while (numCalc > 0)
+        float g = G;
+
+        while (currentpos.y <= h && currentpos.y >= 0)
         {
-            numCalc--;
-
-            currentpos = currentpos + vel + (Vector2.down * _G);
-
-            //Calculate the time to reach the given height
-            //float time = (Mathf.Sqrt(v.y * v.y - 4.0f * (_G * 0.5f) * (p.y - currentpos.y)) - v.y) / (2.0f * (_G * 0.5f));
-
-            //Get the new Xposition by adding the distance to the initial position.
-            //Accelaration = 0
-            //float XPos = p.x + (time * v.x);
-
+            //Apply forces.
+            currentpos = currentpos + vel + (Vector2.down * g);
 
             // Ball bouncing off the walls
             if (currentpos.x > w)
@@ -134,39 +161,37 @@ public class PredictHeight : MonoBehaviour
                 currentpos.x = (2.0f * w) - currentpos.x;
                 vel.x = -vel.x;
             }
-            if (currentpos.x < 0)
+            else if (currentpos.x < 0)
             {
-                currentpos.x = currentpos.x - w;
+                currentpos.x = 0;
+                currentpos.x = currentpos.x - prevpos.x;
                 vel.x = -vel.x;
             }
 
+            //Check if reached height
+            if (currentpos.y >= h && prevpos.y <= h)
+            {
+                currentpos.y = h;
+                xPosition = currentpos.x;
+                drawBall(new Vector2(xPosition, currentpos.y), ballEnd);
+                return true;
+            }
 
+            prevpos = currentpos;
 
-            //if (currentpos.y >= h && prevpos.y <= h)
-            //{
-            //    xPosition = currentpos.x;
-            //    drawBall(new Vector2(xPosition, currentpos.y), ballEnd);
-            //    return true;
-            //}
-
-            //prevpos = currentpos;
-
-            //if(currentpos.y <= 0)
-            //{
-            //    currentpos.y = 0;
-            //    drawBall(currentpos, ballEnd);
-            //    return false;
-            //}
-            //else
-            //{
-            //_G += G;
-            drawBall(currentpos, ballPath);
-            //}
-
-
+            //Check if reached ground.
+            if(currentpos.y <= 0)
+            {
+                currentpos.y = 0;
+                drawBall(currentpos, ballEnd);
+                return false;
+            }
+            else
+            {
+                g += G;
+                drawBall(currentpos, ballPath);
+            }
         }
-
-
         return true;
     }
     #endregion
