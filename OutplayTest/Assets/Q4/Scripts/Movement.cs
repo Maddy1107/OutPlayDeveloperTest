@@ -4,7 +4,7 @@ public class Movement : MonoBehaviour
 {
     public float speed = 5.0f;//movement speed
 
-    private int currentPointIndex = 2;//current point the player is moving towards
+    private int currentPointIndex = 0;//current point the player is moving towards
 
     bool reachedFinal = false;//check if reached the last point
 

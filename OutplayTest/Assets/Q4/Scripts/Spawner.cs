@@ -15,6 +15,19 @@ public class Spawner : MonoBehaviour
 
     private void Awake() => Instance = this;
 
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(50, 100, 100, 50), "Shuffle Objects"))
+        {
+            SpawnObjects();
+        }
+
+        if (GUI.Button(new Rect(50, 200, 100, 50), "Spawn Player") && !GameObject.FindGameObjectWithTag("Player"))
+        {
+            SpawnPlayer();
+        }
+    }
+
     private void Start()
     {
         SpawnObjects();

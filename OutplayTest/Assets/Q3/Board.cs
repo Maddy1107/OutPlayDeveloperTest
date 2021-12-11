@@ -158,18 +158,15 @@ public class Board: MonoBehaviour
             int x = i % GetWidth();
             int y = i / GetWidth();
 
-            Debug.Log(x.ToString() + y.ToString());
-            //Debug.Log(CheckforMatch(x, y, MoveDirection.Right));
-
             if (CheckforMatch(x, y, MoveDirection.Right) >= 3)
             {
                 return true;
             }
 
-            /*if (CheckforMatch(x, y, MoveDirection.Up) >= 3)
+            if (CheckforMatch(x, y, MoveDirection.Up) >= 3)
             {
                 return true;
-            }*/
+            }
 
         }
         return false;
@@ -183,16 +180,16 @@ public class Board: MonoBehaviour
         int currentIndex = 0;
         int MatchCount = 0;
 
-        switch(direction)
+        switch (direction)
         {
             case MoveDirection.Left:
                 while(gotMatch)
                 {
-                    int currentJewelIndex = x - currentIndex;
+                    int targetJewelIndex = x - currentIndex;
                     currentIndex++;
-                    if(currentIndex >= 0)
+                    if(targetJewelIndex >= 0)
                     {
-                        if(currentJewel == GetJewel(currentJewelIndex, y))
+                        if(currentJewel == GetJewel(targetJewelIndex, y))
                         {
                             MatchCount++;
                         }
@@ -211,11 +208,11 @@ public class Board: MonoBehaviour
             case MoveDirection.Right:
                 while (gotMatch)
                 {
-                    int currentJewelIndex = x + currentIndex;
+                    int targetJewelIndex = x + currentIndex;
                     currentIndex++;
-                    if (currentIndex <= GetWidth() - 1)
+                    if (targetJewelIndex <= GetWidth() - 1)
                     {
-                        if (currentJewel == GetJewel(currentJewelIndex, y))
+                        if (currentJewel == GetJewel(targetJewelIndex, y))
                         {
                             MatchCount++;
                         }
@@ -223,8 +220,6 @@ public class Board: MonoBehaviour
                         {
                             gotMatch = false;
                         }
-                        //Debug.Log(currentJewel);
-
                     }
                     else
                     {
@@ -235,11 +230,11 @@ public class Board: MonoBehaviour
             case MoveDirection.Up:
                 while (gotMatch)
                 {
-                    int currentJewelIndex = y + currentIndex;
+                    int targetJewelIndex = y + currentIndex;
                     currentIndex++;
-                    if (currentIndex <= GetHeight() - 1)
+                    if (targetJewelIndex <= GetHeight() - 1)
                     {
-                        if (currentJewel == GetJewel(x, currentJewelIndex))
+                        if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
                             MatchCount++;
                         }
@@ -257,11 +252,11 @@ public class Board: MonoBehaviour
             case MoveDirection.Down:
                 while (gotMatch)
                 {
-                    int currentJewelIndex = x - currentIndex;
+                    int targetJewelIndex = x - currentIndex;
                     currentIndex++;
-                    if (currentIndex >= 0)
+                    if (targetJewelIndex >= 0)
                     {
-                        if (currentJewel == GetJewel(x, currentJewelIndex))
+                        if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
                             MatchCount++;
                         }
@@ -281,6 +276,11 @@ public class Board: MonoBehaviour
         }
     }
 
+    bool JewelSwap(Move move)
+    {
+        MainBoard = OrigBoardbackup;
+        return true;
+    }
 
     //Implement this function
     //Public Move CalculateBestMoveForBoard();
