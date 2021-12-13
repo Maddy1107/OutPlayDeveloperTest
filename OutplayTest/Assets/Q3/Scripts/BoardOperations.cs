@@ -1,14 +1,29 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using UnityEngine;
 using static JewelProperties;
+
+//Note: This is done in a very bruteforce method because of the specification given in the question.
+//Here we could make a different struct for Jewels x and y.
+//Also make another struct to store the result like the move, score.
+//But it is not understandable here if I am allowed to do that or not.
+//Therefore used whatever is given in the specifications.
 
 public class BoardOperations : Board
 {
+    #region Variables
     public static BoardOperations instance;
 
-    JewelKind[,] OrigBoardbackup;
+    public JewelKind[,] OrigBoardbackup;
 
-    Dictionary<Move, int> AllMovesWithMatches = new Dictionary<Move, int>();
+    public List<Move> AllMatches = new List<Move>();
+    public List<int> MatchCount = new List<int>();
+
+    public List<JewelCoords> bestMoveJewels = new List<JewelCoords>();
+
+    //As said in the above note, here except of making so many lists we can just make one list of type jewel Data and one list of
+    //the move result that we get.
+
+    #endregion
 
     private void Awake() => instance = this;
 
@@ -16,6 +31,8 @@ public class BoardOperations : Board
     {
         MainBoard = new JewelKind[numOfRows, numOfCols];
     }
+
+    #region Shuffle
 
     //Shuffle the board
     public void shuffle()
@@ -26,7 +43,15 @@ public class BoardOperations : Board
         {
             assignJewelstoBoard();
         }
+
+        AllMatches.Clear();
+        MatchCount.Clear();
+
+        OrigBoardbackup = (JewelKind[,])MainBoard.Clone();
     }
+    #endregion
+
+    #region Check Whole Board for match
 
     //To check if the board is created without any matches
     bool CheckforAnyMatchonBoard()
@@ -34,51 +59,67 @@ public class BoardOperations : Board
         //Checking only right and up to avoid repeat checking
         for (int i = 0; i < MainBoard.Length; i++)
         {
-            int currentCount;
-            Move m;
             int x = i % GetWidth();
             int y = i / GetWidth();
 
-            currentCount = CheckforMatch(x, y, MoveDirection.Right);
-            m = new Move(x, y, MoveDirection.Right);
-            if (currentCount >= 3)
+            List<JewelCoords> RightDir = CheckforMatch(x, y, MoveDirection.Right);
+            if (RightDir.Count >= 3)
             {
-                if (!CheckIFMoveAlreadyExist(m))
-                    AllMovesWithMatches.Add(m, currentCount);
                 return true;
             }
 
-            currentCount = CheckforMatch(x, y, MoveDirection.Up);
-            m = new Move(x, y, MoveDirection.Up);
-
-            if (currentCount >= 3)
+            List<JewelCoords> UpDir = CheckforMatch(x, y, MoveDirection.Up);
+            if (UpDir.Count >= 3)
             {
-                if (!CheckIFMoveAlreadyExist(m))
-                    AllMovesWithMatches.Add(m, currentCount);
                 return true;
             }
-
         }
         return false;
     }
+    #endregion
 
-    //Check if already exists
-    bool CheckIFMoveAlreadyExist(Move m)
+    #region Check whole board for match after a certain swap
+    void checkallMatch(Move m)
     {
-        if (AllMovesWithMatches.ContainsKey(m))
+        //Checking only right and up to avoid repeat checking
+        for (int i = 0; i < MainBoard.Length; i++)
         {
-            return true;
+            int x = i % GetWidth();
+            int y = i / GetWidth();
+
+            List<JewelCoords> RightDir = CheckforMatch(x, y, MoveDirection.Right);
+            if (RightDir.Count >= 3)
+            {
+                if (!MatchCount.Contains(RightDir.Count))
+                {
+                    MatchCount.Add(RightDir.Count);
+                    AllMatches.Add(m);
+                }
+            }
+
+            List<JewelCoords> UpDir = CheckforMatch(x, y, MoveDirection.Up);
+            if (UpDir.Count >= 3)
+            {
+                if (!MatchCount.Contains(UpDir.Count))
+                {
+                    MatchCount.Add(UpDir.Count);
+                    AllMatches.Add(m);
+                }
+            }
         }
-        return false;
     }
+    #endregion
+
+    #region Check for match in a particular Direction
 
     //Check for match in the given direction and return the count
-    int CheckforMatch(int x, int y, MoveDirection direction)
+    List<JewelCoords> CheckforMatch(int x, int y, MoveDirection direction)
     {
         bool gotMatch = true;
         JewelKind currentJewel = GetJewel(x, y);
         int currentIndex = 0;
-        int MatchCount = 0;
+
+        List<JewelCoords> JewelData = new List<JewelCoords>();
 
         switch (direction)
         {
@@ -87,11 +128,12 @@ public class BoardOperations : Board
                 {
                     int targetJewelIndex = x - currentIndex;
                     currentIndex++;
+                    
                     if (targetJewelIndex >= 0)
                     {
                         if (currentJewel == GetJewel(targetJewelIndex, y))
                         {
-                            MatchCount++;
+                            JewelData.Add(new JewelCoords(targetJewelIndex, y));
                         }
                         else
                         {
@@ -103,7 +145,7 @@ public class BoardOperations : Board
                         gotMatch = false;
                     }
                 }
-                return MatchCount;
+                return JewelData;
 
             case MoveDirection.Right:
                 while (gotMatch)
@@ -114,7 +156,7 @@ public class BoardOperations : Board
                     {
                         if (currentJewel == GetJewel(targetJewelIndex, y))
                         {
-                            MatchCount++;
+                            JewelData.Add(new JewelCoords(targetJewelIndex, y));
                         }
                         else
                         {
@@ -126,7 +168,8 @@ public class BoardOperations : Board
                         gotMatch = false;
                     }
                 }
-                return MatchCount;
+                return JewelData;
+
             case MoveDirection.Up:
                 while (gotMatch)
                 {
@@ -136,7 +179,7 @@ public class BoardOperations : Board
                     {
                         if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
-                            MatchCount++;
+                            JewelData.Add(new JewelCoords(y, targetJewelIndex));
                         }
                         else
                         {
@@ -148,7 +191,8 @@ public class BoardOperations : Board
                         gotMatch = false;
                     }
                 }
-                return MatchCount;
+                return JewelData;
+
             case MoveDirection.Down:
                 while (gotMatch)
                 {
@@ -158,7 +202,7 @@ public class BoardOperations : Board
                     {
                         if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
-                            MatchCount++;
+                            JewelData.Add(new JewelCoords(y, targetJewelIndex));
                         }
                         else
                         {
@@ -170,25 +214,31 @@ public class BoardOperations : Board
                         gotMatch = false;
                     }
                 }
-                return MatchCount;
+                return JewelData;
+
             default:
-                return MatchCount;
+                return JewelData;
         }
     }
+    #endregion
+
+    #region Swap Jewels
 
     //Swap
-    bool JewelSwap(Move m)
+    public bool JewelSwap(Move m)
     {
         MainBoard = (JewelKind[,])OrigBoardbackup.Clone(); ;
 
         JewelKind jewel1 = GetJewel(m.x, m.y);
         JewelKind jewel2 = JewelKind.Empty;
+
         switch (m.direction)
         {
             case MoveDirection.Right:
                 if (m.x < GetWidth() - 1)
                 {
-                    swapPieces(jewel1, jewel2, m.x + 1, m.y);
+                    jewel2 = GetJewel(m.x + 1, m.y);
+                    SetJewel(m.x + 1, m.y, jewel1);
                 }
                 else
                 {
@@ -198,7 +248,8 @@ public class BoardOperations : Board
             case MoveDirection.Left:
                 if (m.x > 0)
                 {
-                    swapPieces(jewel1, jewel2, m.x - 1, m.y);
+                    jewel2 = GetJewel(m.x - 1, m.y);
+                    SetJewel(m.x - 1, m.y, jewel1);
                 }
                 else
                 {
@@ -208,7 +259,8 @@ public class BoardOperations : Board
             case MoveDirection.Up:
                 if (m.y < GetHeight() - 1)
                 {
-                    swapPieces(jewel1, jewel2, m.x, m.y + 1);
+                    jewel2 = GetJewel(m.x, m.y + 1);
+                    SetJewel(m.x, m.y + 1, jewel1);
                 }
                 else
                 {
@@ -218,7 +270,8 @@ public class BoardOperations : Board
             case MoveDirection.Down:
                 if (m.y > 0)
                 {
-                    swapPieces(jewel1, jewel2, m.x, m.y - 1);
+                    jewel2 = GetJewel(m.x, m.y - 1);
+                    SetJewel(m.x, m.y - 1, jewel1);
                 }
                 else
                 {
@@ -229,12 +282,9 @@ public class BoardOperations : Board
         SetJewel(m.x, m.y, jewel2);
         return true;
     }
+    #endregion
 
-    public void swapPieces(JewelKind jewel1, JewelKind jewel2, int x, int y)
-    {
-        jewel2 = GetJewel(x, y);
-        SetJewel(x, y, jewel1);
-    }
+    #region Calculate Best Move
 
     //Implement this function
     public Move CalculateBestMoveForBoard()
@@ -265,25 +315,26 @@ public class BoardOperations : Board
             }
         }
 
-        int bestValue = AllMovesWithMatches.Values.Max();
-        Move bestMove = AllMovesWithMatches.Single(s => s.Value == bestValue).Key;
-
         MainBoard = (JewelKind[,])OrigBoardbackup.Clone();
+
+        if (AllMatches.Count == 0 || MatchCount.Count == 0)
+            return new Move(0, 0, MoveDirection.None);
+
+        Move bestMove = AllMatches[MatchCount.IndexOf(Mathf.Max(MatchCount.ToArray()))];
+
+        bestMoveJewels = CheckforMatch(bestMove.x, bestMove.y, bestMove.direction);
 
         return bestMove;
     }
 
-    bool StoreResult(int x, int y, MoveDirection direction)
+    void StoreResult(int x, int y, MoveDirection direction)
     {
         Move currMove = new Move(x, y, direction);
 
         if (JewelSwap(currMove))
         {
-            if (CheckforAnyMatchonBoard())
-            {
-                return true;
-            }
+            checkallMatch(currMove);
         }
-        return false;
     }
+    #endregion
 }

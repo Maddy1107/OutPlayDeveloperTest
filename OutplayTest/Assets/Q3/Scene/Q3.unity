@@ -121,7 +121,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &225094390
+--- !u!1 &381426271
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,8 +129,58 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 225094392}
-  - component: {fileID: 225094391}
+  - component: {fileID: 381426273}
+  - component: {fileID: 381426272}
+  m_Layer: 0
+  m_Name: RenderUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &381426272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381426271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef40f62e5d4e13489a869378ec37856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RedJewel: {fileID: 2800000, guid: 4e5b1d69181156044ab3bbc9a428fd88, type: 3}
+  OrangeJewel: {fileID: 2800000, guid: c7f61edbd70c7c24f8fe5d9af56113cf, type: 3}
+  YellowJewel: {fileID: 2800000, guid: aa6662fec0e35ed40894e9c642243bcd, type: 3}
+  GreenJewel: {fileID: 2800000, guid: b67b88e177db8274a9534ee37651df58, type: 3}
+  BlueJewel: {fileID: 2800000, guid: 645e7bdf19dee0e42830fa436ddca37f, type: 3}
+  IndigoJewel: {fileID: 2800000, guid: a38bdbbd8b6ff8644b92c3751cf03e0c, type: 3}
+  VioletJewel: {fileID: 2800000, guid: 5e31ccbce89b35347b9a4837ba825889, type: 3}
+--- !u!4 &381426273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381426271}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 102.406586, y: 368.4546, z: -180.2768}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &629509141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 629509143}
+  - component: {fileID: 629509142}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -138,33 +188,33 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &225094391
+--- !u!114 &629509142
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 225094390}
+  m_GameObject: {fileID: 629509141}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b495b5277c69014cacefd4408660894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numOfRows: 10
-  numOfCols: 10
---- !u!4 &225094392
+  numOfRows: 5
+  numOfCols: 5
+--- !u!4 &629509143
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 225094390}
+  m_GameObject: {fileID: 629509141}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 102.406586, y: 368.4546, z: -180.2768}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1370105975
 GameObject:
@@ -195,15 +245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76ca9ff81de7794ea74aaf27ac8291c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedJewel: {fileID: 2800000, guid: 4e5b1d69181156044ab3bbc9a428fd88, type: 3}
-  OrangeJewel: {fileID: 2800000, guid: c7f61edbd70c7c24f8fe5d9af56113cf, type: 3}
-  YellowJewel: {fileID: 2800000, guid: aa6662fec0e35ed40894e9c642243bcd, type: 3}
-  GreenJewel: {fileID: 2800000, guid: b67b88e177db8274a9534ee37651df58, type: 3}
-  BlueJewel: {fileID: 2800000, guid: 645e7bdf19dee0e42830fa436ddca37f, type: 3}
-  IndigoJewel: {fileID: 2800000, guid: a38bdbbd8b6ff8644b92c3751cf03e0c, type: 3}
-  VioletJewel: {fileID: 2800000, guid: 5e31ccbce89b35347b9a4837ba825889, type: 3}
-  numOfRows: 0
-  numOfCols: 0
 --- !u!4 &1370105977
 Transform:
   m_ObjectHideFlags: 0
@@ -254,7 +295,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.047169805, g: 0.047169805, b: 0.047169805, a: 0}
+  m_BackGroundColor: {r: 0.38679248, g: 0.2536045, b: 0.2536045, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

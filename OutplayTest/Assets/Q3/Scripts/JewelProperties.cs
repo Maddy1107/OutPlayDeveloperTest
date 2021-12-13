@@ -16,6 +16,7 @@ public class JewelProperties : MonoBehaviour
 
     public enum MoveDirection
     {
+        None,//Adding this to state that there are no matches
         Up,
         Down,
         Left,
@@ -35,4 +36,17 @@ public class JewelProperties : MonoBehaviour
             this.direction = direction;
         }
     };
+
+    //Adding this struct to store the bestMove data
+    public struct JewelCoords
+    {
+        public int x;
+        public int y;
+
+        public JewelCoords(int x,int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
 }
