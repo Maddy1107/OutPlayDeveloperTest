@@ -14,12 +14,20 @@ public class RenderUI : MonoBehaviour
 
     bool ShowCoordiantes = false;
 
-    bool showBoard = true;
+    bool showBoard = false;
 
     bool showOriginalBoard = true;
 
+    string text;
+
+    GUIStyle style = new GUIStyle();
+
     void OnGUI()
     {
+        style.fontSize = 20;
+        style.fontStyle = FontStyle.Bold;
+        style.alignment = TextAnchor.MiddleCenter;
+
         if (showBoard)
         {
             if (GUI.Button(new Rect(70, Screen.height - 450, 120, 50), "Show Coordinates"))
@@ -39,13 +47,22 @@ public class RenderUI : MonoBehaviour
 
                 JewelProperties.Move m = BoardOperations.instance.CalculateBestMoveForBoard();
                 BoardOperations.instance.JewelSwap(m);
-                string text = "Best Move is:\n Move (" + m.x.ToString() + ", " + m.y.ToString() + ") to the " + m.direction + "direction."; 
-                GUI.Label(new Rect(500 , 100, 1000, 1000), "Hello");
+                BoardOperations.instance.ShowBestMoveJewels(m);
 
+                if (m.direction == JewelProperties.MoveDirection.None)
+                    text = "No Match Available";
+                else
+                    text = "Best Move:\n Move (" + m.x.ToString() + ", " + m.y.ToString() + ") to the\n" + m.direction + " direction.";
             }
+
             else if (GUI.Button(new Rect(60, Screen.height - 150, 130, 50), "Show Original Board") && !showOriginalBoard)
             {
                 showOriginalBoard = true;
+            }
+
+            if (!showOriginalBoard)
+            {
+                GUI.Label(new Rect(20, Screen.height - 550, 200, 50), text,style);
             }
 
             //Visualize the board
@@ -61,9 +78,10 @@ public class RenderUI : MonoBehaviour
                 else
                 {
                     GUI.DrawTexture(new Rect(jewelGridSize * x + Screen.width / 4, jewelGridSize * (BoardOperations.instance.GetHeight() - y) - 70, jewelGridSize, jewelGridSize), getTexture(BoardOperations.instance.MainBoard[x, y]));
+
                     foreach (JewelProperties.JewelCoords j in BoardOperations.instance.bestMoveJewels)
                     {
-                        GUI.DrawTexture(new Rect(jewelGridSize * j.x + Screen.width / 4, jewelGridSize * (BoardOperations.instance.GetHeight() - j.y) - 70, jewelGridSize, jewelGridSize), getTexture(JewelProperties.JewelKind.Empty));
+                        GUI.DrawTexture(new Rect(jewelGridSize * j.x + Screen.width / 4, jewelGridSize * (BoardOperations.instance.GetHeight() - j.y) - 70, jewelGridSize - 10, jewelGridSize - 20), getTexture(JewelProperties.JewelKind.Empty));
                     }
                 }
 

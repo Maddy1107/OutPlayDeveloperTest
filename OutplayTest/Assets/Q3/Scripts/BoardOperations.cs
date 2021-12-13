@@ -6,7 +6,7 @@ using static JewelProperties;
 //Here we could make a different struct for Jewels x and y.
 //Also make another struct to store the result like the move, score.
 //But it is not understandable here if I am allowed to do that or not.
-//Therefore used whatever is given in the specifications.
+//Therefore used whatever is given in the specifications with a single exception.
 
 public class BoardOperations : Board
 {
@@ -15,13 +15,14 @@ public class BoardOperations : Board
 
     public JewelKind[,] OrigBoardbackup;
 
+
+    //As said in the above note, here except of making so many lists we can just make one list of type jewel Data and one list of
+    //the move result that we get.
+
     public List<Move> AllMatches = new List<Move>();
     public List<int> MatchCount = new List<int>();
 
     public List<JewelCoords> bestMoveJewels = new List<JewelCoords>();
-
-    //As said in the above note, here except of making so many lists we can just make one list of type jewel Data and one list of
-    //the move result that we get.
 
     #endregion
 
@@ -96,7 +97,7 @@ public class BoardOperations : Board
                     AllMatches.Add(m);
                 }
             }
-
+            
             List<JewelCoords> UpDir = CheckforMatch(x, y, MoveDirection.Up);
             if (UpDir.Count >= 3)
             {
@@ -113,7 +114,7 @@ public class BoardOperations : Board
     #region Check for match in a particular Direction
 
     //Check for match in the given direction and return the count
-    List<JewelCoords> CheckforMatch(int x, int y, MoveDirection direction)
+    public List<JewelCoords> CheckforMatch(int x, int y, MoveDirection direction)
     {
         bool gotMatch = true;
         JewelKind currentJewel = GetJewel(x, y);
@@ -179,7 +180,7 @@ public class BoardOperations : Board
                     {
                         if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
-                            JewelData.Add(new JewelCoords(y, targetJewelIndex));
+                            JewelData.Add(new JewelCoords(x, targetJewelIndex));
                         }
                         else
                         {
@@ -202,7 +203,7 @@ public class BoardOperations : Board
                     {
                         if (currentJewel == GetJewel(x, targetJewelIndex))
                         {
-                            JewelData.Add(new JewelCoords(y, targetJewelIndex));
+                            JewelData.Add(new JewelCoords(x, targetJewelIndex));
                         }
                         else
                         {
@@ -322,8 +323,6 @@ public class BoardOperations : Board
 
         Move bestMove = AllMatches[MatchCount.IndexOf(Mathf.Max(MatchCount.ToArray()))];
 
-        bestMoveJewels = CheckforMatch(bestMove.x, bestMove.y, bestMove.direction);
-
         return bestMove;
     }
 
@@ -335,6 +334,39 @@ public class BoardOperations : Board
         {
             checkallMatch(currMove);
         }
+    }
+    #endregion
+
+    #region Show the position of the best Move
+
+    //If we can make a separate struct for the results the we can save the result in that avoiding another loop
+    //It is because if we make a separate struct for results we can save every group of jewels in a particular result object
+    //Also it will help ease out the best move as we can save all the result in a list of result and then find out the best result.
+    public void ShowBestMoveJewels(Move m)
+    {
+        //Get the
+        JewelSwap(m);
+
+        for (int i = 0; i < MainBoard.Length; i++)
+        {
+            int x = i % GetWidth();
+            int y = i / GetWidth();
+
+            List<JewelCoords> RightDir = CheckforMatch(x, y, MoveDirection.Right);
+            if (RightDir.Count >= 3)
+            {
+                bestMoveJewels = RightDir;
+                break;
+            }
+
+            List<JewelCoords> UpDir = CheckforMatch(x, y, MoveDirection.Up);
+            if (UpDir.Count >= 3)
+            {
+                bestMoveJewels = UpDir;
+                break;
+            }
+        }
+
     }
     #endregion
 }

@@ -102,9 +102,6 @@ public class PredictHeight : MonoBehaviour
         {
             GUI.Label(new Rect((Screen.width - width) / 2 + 80, Screen.height - groundHeight + 10, width, 30), "Required Position-" + reqX, style);
         }
-
-        Debug.Log(reqX);
-
     }
 
     void drawBall(Vector2 pos, Texture tex)

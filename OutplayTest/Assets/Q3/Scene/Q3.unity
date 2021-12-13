@@ -200,8 +200,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b495b5277c69014cacefd4408660894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numOfRows: 5
-  numOfCols: 5
+  numOfRows: 10
+  numOfCols: 10
+  MatchCount: 
 --- !u!4 &629509143
 Transform:
   m_ObjectHideFlags: 0
